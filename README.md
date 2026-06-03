@@ -241,7 +241,7 @@ Indian Manifesto Tracker aims to increase transparency in democratic governance 
 
 **Anup Kumar Mishra**
 
-* LinkedIn: https://linkedin.com/in/YOUR_LINKEDIN
+* LinkedIn: https://www.linkedin.com/in/anupkumar-mishra/
 * GitHub: https://github.com/Anupkumar-mishra
 
 ---
