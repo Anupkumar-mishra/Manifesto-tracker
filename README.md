@@ -131,7 +131,7 @@ manifesto-tracker
 
 ### Home Dashboard
 
-![Dashboard](public/HomeDashboard.png)
+![Dashboard](public/Home-Dashboard.png)
 
 ### Promise Analytics
 
