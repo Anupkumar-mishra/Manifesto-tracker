@@ -131,19 +131,19 @@ manifesto-tracker
 
 ### Home Dashboard
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](public/HomeDashboard.png)
 
 ### Promise Analytics
 
-![Analytics](screenshots/analytics.png)
+![Analytics](public/Analytics.png)
 
 ### AI Chat Assistant
 
-![Chatbot](screenshots/chatbot.png)
+![Chatbot](public/Chatbot-Assistant.png)
 
-### Interactive Map View
+### Promises
 
-![Map](screenshots/mapview.png)
+![Map](public/Promises.png)
 
 ---
 
