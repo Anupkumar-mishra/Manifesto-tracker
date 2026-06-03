@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Region {
+  id          String      @id @default(cuid())
+  name        String
+  nameHi      String?
+  code        String      @unique
+  level       RegionLevel
+  parentId    String?
+  parent      Region?     @relation("RegionHierarchy", fields: [parentId], references: [id])
+  children    Region[]    @relation("RegionHierarchy")
+  createdAt   DateTime    @default(now())
+  governments Government[]
+  promises    Promise[]
+}
+
+enum RegionLevel {
+  NATIONAL
+  STATE
+  DISTRICT
+  PANCHAYAT
+}
+
+model Party {
+  id          String      @id @default(cuid())
+  name        String
+  shortName   String
+  colour      String
+  logoUrl     String?
+  website     String?
+  createdAt   DateTime    @default(now())
+  governments Government[]
+  manifestos  Manifesto[]
+}
+
+model Government {
+  id          String      @id @default(cuid())
+  name        String
+  partyId     String
+  party       Party       @relation(fields: [partyId], references: [id])
+  regionId    String
+  region      Region      @relation(fields: [regionId], references: [id])
+  termStart   DateTime
+  termEnd     DateTime?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  manifestos  Manifesto[]
+  promises    Promise[]
+}
+
+model Manifesto {
+  id           String      @id @default(cuid())
+  partyId      String
+  party        Party       @relation(fields: [partyId], references: [id])
+  governmentId String?
+  government   Government? @relation(fields: [governmentId], references: [id])
+  electionYear Int
+  title        String
+  pdfUrl       String
+  rawText      String?
+  processedAt  DateTime?
+  createdAt    DateTime    @default(now())
+  promises     Promise[]
+}
+
+model Promise {
+  id              String          @id @default(cuid())
+  manifestoId     String
+  manifesto       Manifesto       @relation(fields: [manifestoId], references: [id])
+  governmentId    String
+  government      Government      @relation(fields: [governmentId], references: [id])
+  regionId        String
+  region          Region          @relation(fields: [regionId], references: [id])
+  text            String
+  textHi          String?
+  summary         String?
+  category        Category        @default(OTHER)
+  targetGroup     String?
+  statedDeadline  String?
+  status          PromiseStatus   @default(NOT_STARTED)
+  confidenceScore Float?
+  viewCount       Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  evidence        Evidence[]
+  statusHistory   StatusHistory[]
+
+  @@index([status])
+  @@index([category])
+  @@index([regionId])
+  @@index([governmentId])
+}
+
+enum PromiseStatus {
+  DELIVERED
+  IN_PROGRESS
+  STALLED
+  BROKEN
+  NOT_STARTED
+}
+
+enum Category {
+  HEALTH
+  EDUCATION
+  INFRASTRUCTURE
+  AGRICULTURE
+  EMPLOYMENT
+  ECONOMY
+  WOMEN
+  YOUTH
+  ENVIRONMENT
+  DEFENCE
+  GOVERNANCE
+  SOCIAL_WELFARE
+  OTHER
+}
+
+model Evidence {
+  id          String         @id @default(cuid())
+  promiseId   String
+  promise     Promise        @relation(fields: [promiseId], references: [id])
+  url         String
+  title       String
+  source      String
+  snippet     String?
+  publishedAt DateTime?
+  addedBy     EvidenceSource @default(AI_SCRAPER)
+  verified    Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+}
+
+enum EvidenceSource {
+  AI_SCRAPER
+  CITIZEN
+  ADMIN
+}
+
+model StatusHistory {
+  id          String         @id @default(cuid())
+  promiseId   String
+  promise     Promise        @relation(fields: [promiseId], references: [id])
+  oldStatus   PromiseStatus?
+  newStatus   PromiseStatus
+  reason      String?
+  changedAt   DateTime       @default(now())
+}

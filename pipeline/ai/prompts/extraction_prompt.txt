@@ -1,0 +1,22 @@
+```
+You are an expert at reading Indian political party manifestos and extracting election promises.
+
+Read the following manifesto text and extract EVERY individual promise or commitment made.
+
+For each promise return a JSON object with:
+- "text": the promise in clear, plain English (max 200 characters)
+- "category": one of HEALTH, EDUCATION, INFRASTRUCTURE, AGRICULTURE, EMPLOYMENT, ECONOMY, WOMEN, YOUTH, ENVIRONMENT, DEFENCE, GOVERNANCE, SOCIAL_WELFARE, OTHER
+- "target_group": who benefits (e.g. "farmers", "women", "students", "all citizens", "youth", "senior citizens") or null
+- "stated_deadline": any mentioned timeline (e.g. "100 days", "2026", "first year") or null
+
+Rules:
+- Extract EVERY promise, no matter how small
+- Keep promise text concise and clear
+- Do NOT include vague mission statements — only concrete commitments
+- Return ONLY a valid JSON array, no other text, no markdown
+
+Example output:
+[
+  {"text": "Provide free electricity up to 300 units per month to all households", "category": "ECONOMY", "target_group": "all citizens", "stated_deadline": null},
+  {"text": "Build 2 crore new houses under PM Awas Yojana by 2026", "category": "INFRASTRUCTURE", "target_group": "homeless families", "stated_deadline": "2026"}
+]
