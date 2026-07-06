@@ -11,31 +11,23 @@ const adminRoutes = require("./routes/admin.routes");
 
 const app = express();
 
-// Allowed Frontend Origins
-const allowedOrigins = [
-  "https://manifesto-tracker-theta.vercel.app",
-  "http://localhost:5173",
-];
+// Required for Render (fixes X-Forwarded-For error)
+app.set("trust proxy", 1);
 
+// CORS Configuration
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests without origin (Postman, curl, health checks)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Not allowed by CORS"));
-    },
+    origin: [
+      "https://manifesto-tracker-theta.vercel.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
   })
 );
 
 app.use(express.json());
 
-// Rate Limiter
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000,
@@ -45,15 +37,15 @@ const limiter = rateLimit({
 
 app.use("/api", limiter);
 
-// Health Check
+// Health check
 app.get("/api/health", (req, res) => {
-  res.status(200).json({
+  res.json({
     status: "ok",
     message: "Manifesto Tracker API is running",
   });
 });
 
-// API Routes
+// Routes
 app.use("/api/promises", promiseRoutes);
 app.use("/api/parties", partyRoutes);
 app.use("/api/regions", regionRoutes);
